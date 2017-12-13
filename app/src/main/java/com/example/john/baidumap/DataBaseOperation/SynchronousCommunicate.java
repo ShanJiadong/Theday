@@ -1,7 +1,7 @@
 package com.example.john.baidumap.DataBaseOperation;
 
 
-import com.example.john.baidumap.baseclass.User;
+import baseclass.User;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

@@ -1,4 +1,4 @@
-package com.example.john.baidumap.baseclass;
+package baseclass;
 
 import java.io.Serializable;
 import java.util.ArrayList;

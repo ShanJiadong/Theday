@@ -1,4 +1,4 @@
-package com.example.john.baidumap.baseclass;
+package baseclass;
 
 /**
  * Created by android学习 on 2017/12/12.

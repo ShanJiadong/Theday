@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.john.baidumap.baseclass.User;
+import baseclass.User;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
