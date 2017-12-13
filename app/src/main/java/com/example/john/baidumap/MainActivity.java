@@ -26,6 +26,7 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.route.BikingRoutePlanOption;
 import com.baidu.mapapi.search.route.BikingRouteResult;
@@ -37,11 +38,13 @@ import com.baidu.mapapi.search.route.MassTransitRouteResult;
 import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.PlanNode;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
+import com.baidu.mapapi.search.route.TransitRoutePlanOption;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.example.john.baidumap.overlayutil.BikingRouteOverlay;
 import com.example.john.baidumap.overlayutil.DrivingRouteOverlay;
+import com.example.john.baidumap.overlayutil.MassTransitRouteOverlay;
 import com.example.john.baidumap.overlayutil.TransitRouteOverlay;
 import com.example.john.baidumap.overlayutil.WalkingRouteOverlay;
 import static android.R.attr.paddingBottom;
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private UiSettings mUiSettings;
     private Button button1,button2,button3,button4;
     private RoutePlanSearch mSearch = null;
+    RouteLine route = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,9 +127,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             @Override
-            public void onGetMassTransitRouteResult(MassTransitRouteResult massTransitRouteResult) {
-
-                mSearch.destroy();
+            public void onGetMassTransitRouteResult(MassTransitRouteResult result) {
+                // 获取公交换乘路径规划结果
+                if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+                    Toast.makeText(MainActivity.this, "抱歉，未找到结果", Toast.LENGTH_SHORT).show();
+                }
+                if (result.error == SearchResult.ERRORNO.AMBIGUOUS_ROURE_ADDR) {
+                    // 起终点或途经点地址有岐义，通过以下接口获取建议查询信息  
+                    result.getSuggestAddrInfo();
+                    return;
+                }
+                if (result.error == SearchResult.ERRORNO.NO_ERROR) {
+                    MassTransitRouteOverlay overlay = new MassTransitRouteOverlay(mBaidumap);
+                    mBaidumap.setOnMarkerClickListener(overlay);
+                    overlay.setData(result.getRouteLines().get(0));
+                    overlay.addToMap();
+                    overlay.zoomToSpan();
+                }
             }
             public void onGetDrivingRouteResult(DrivingRouteResult result) {
                 if(result == null||result.error!=SearchResult.ERRORNO.NO_ERROR){
@@ -143,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
                     overlay.addToMap();
                     overlay.zoomToSpan();
                 }
-                mSearch.destroy();
             }
             @Override
             public void onGetIndoorRouteResult(IndoorRouteResult indoorRouteResult) {
@@ -176,8 +193,10 @@ public class MainActivity extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", "西二旗地铁站");
-                PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", "百度科技园");
+                route = null;
+                mBaidumap.clear();
+                PlanNode stNode = PlanNode.withCityNameAndPlaceName("珠海", "暨南大学珠海校区北门");
+                PlanNode enNode = PlanNode.withCityNameAndPlaceName("珠海", "圆明新园");
                 mSearch.walkingSearch((new WalkingRoutePlanOption())
                         .from(stNode)
                         .to(enNode));
@@ -189,22 +208,26 @@ public class MainActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", "西二旗地铁站");
-                PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", "百度科技园");
+                route = null;
+                mBaidumap.clear();
+                PlanNode stNode = PlanNode.withCityNameAndPlaceName("珠海", "暨南大学珠海校区北门");
+                PlanNode enNode = PlanNode.withCityNameAndPlaceName("广州", "暨南大学");
                 mSearch.drivingSearch((new DrivingRoutePlanOption())
                         .from(stNode)
                         .to(enNode));
             }
         });
 
-        //骑行规划
+        //跨城公交规划
         button3 = (Button)findViewById(R.id.bus);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PlanNode stMassNode = PlanNode.withCityNameAndPlaceName("北京", "天安门");
-                PlanNode enMassNode = PlanNode.withCityNameAndPlaceName("上海", "东方明珠");
-                mSearch.masstransitSearch(new MassTransitRoutePlanOption().from(stMassNode).to(enMassNode));
+                route = null;
+                mBaidumap.clear();
+                PlanNode stMassNode = PlanNode.withCityNameAndPlaceName("珠海", "暨南大学");
+                PlanNode enMassNode = PlanNode.withCityNameAndPlaceName("广州", "广州南站");
+                mSearch.transitSearch(new TransitRoutePlanOption().from(stMassNode).to(enMassNode));
             }
         });
 
@@ -213,8 +236,10 @@ public class MainActivity extends AppCompatActivity {
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PlanNode stNode = PlanNode.withCityNameAndPlaceName("北京", "龙泽");
-                PlanNode enNode = PlanNode.withCityNameAndPlaceName("北京", "西单");
+                route = null;
+                mBaidumap.clear();
+                PlanNode stNode = PlanNode.withCityNameAndPlaceName("珠海", "暨南大学");
+                PlanNode enNode = PlanNode.withCityNameAndPlaceName("珠海", "海滨公园");
                 mSearch.bikingSearch((new BikingRoutePlanOption())
                         .from(stNode)
                         .to(enNode));
