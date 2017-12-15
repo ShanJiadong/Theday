@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import baseclass.User;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,6 +13,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import baseclass.Task;
+import baseclass.User;
 
 /**
  * Created by android学习 on 2017/12/12.
@@ -23,7 +26,9 @@ public class DBManager {
     public static final int XLH_UPDATE = 0;
     public static final int XLH_INSERT = 1;
 
-    //公开操作
+/*************************************************************************************************/
+/************************************公开操作开始*************************************************/
+
     //更新或创建数据库
     public static void CreateUpdateDataBase(Context context, String name,
                                             SQLiteDatabase.CursorFactory factory, int version){
@@ -94,7 +99,29 @@ public class DBManager {
             return null;
     }
 
-    //内部操作
+    public static boolean fetch(String account, String password, String call,
+                                List<Task> AllTask, List<Task> Tasks){
+        User user = DBManager.GetUser(account);
+        //不存在该用户
+        if (user == null)
+            return false;
+        //密码不正确
+        if (!user.getPassword().equals(password))
+            return false;
+
+        call = user.toString();
+        AllTask.addAll(user.getAllTask());
+        Tasks.addAll(user.getCurrentTask());
+
+        return true;
+    }
+
+/**************************************公开操作结束*************************************************/
+/***************************************************************************************************/
+
+/***************************************************************************************************/
+/***********************************内部操作开始****************************************************/
+
     //检查用户是否存在
     private static boolean isExist(String account){
        if (searchByAccount(account) == null)
@@ -188,4 +215,6 @@ public class DBManager {
             return allUsers;
     }
 
+/************************************内部操作结束**************************************************/
+/**************************************************************************************************/
 }

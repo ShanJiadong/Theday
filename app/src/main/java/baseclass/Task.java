@@ -17,14 +17,15 @@ public class Task implements Serializable {
     private int end_year;
     private int end_month;
     private int end_day;
-    //private int end_hour;
-    //private int end_minnute;
+    private int end_hour;
+    private int end_minute;
 
     private String task_name;
     private String task_content;
     private String task_attention;
 
     private List<Location> task_location;
+    private List<String> task_tag;
 
     private boolean flag_finished;
 
@@ -35,7 +36,7 @@ public class Task implements Serializable {
         //初始化创建时间
         Calendar calendar = Calendar.getInstance();
         begin_year = calendar.get(Calendar.YEAR);
-        begin_month = calendar.get(Calendar.MONTH);
+        begin_month = calendar.get(Calendar.MONTH) + 1;
         begin_day = calendar.get(Calendar.DAY_OF_MONTH);
 
         //无条件下默认创建一周任务
@@ -58,25 +59,32 @@ public class Task implements Serializable {
             end_year = begin_year;
         }
 
+        end_minute = 0;
+        end_hour = 0;
+
         task_name = "";
         task_content = "";
         task_attention = "";
         task_location = new ArrayList<>();
+        task_tag = new ArrayList<>();
         flag_finished = false;
     }
 
-    public Task(int end_year, int end_month, int end_day, String task_name, String task_content,
-                String task_attention, List<Location> task_location){
+    public Task(int end_year, int end_month, int end_day, int end_hour, int end_minute,
+                String task_name, String task_content, String task_attention,
+                List<Location> task_location, List<String> task_tag){
         //初始化创建时间
         Calendar calendar = Calendar.getInstance();
         begin_year = calendar.get(Calendar.YEAR);
-        begin_month = calendar.get(Calendar.MONTH);
+        begin_month = calendar.get(Calendar.MONTH) + 1;
         begin_day = calendar.get(Calendar.DAY_OF_MONTH);
 
         //初始化截止日期
         this.end_year = end_year;
         this.end_month = end_month;
         this.end_day = end_day;
+        this.end_hour = end_hour;
+        this.end_minute = end_minute;
 
         //初始化任务内容
         this.task_name = task_name;
@@ -85,21 +93,24 @@ public class Task implements Serializable {
 
         //初始化任务位置
         this.task_location = task_location;
+        this.task_tag = task_tag;
         flag_finished = false;
     }
 
-    public Task(int end_year, int end_month, int end_day, String task_name,
-                String task_content, String task_attention){
+    public Task(int end_year, int end_month, int end_day, int end_hour, int end_minute,
+                String task_name, String task_content, String task_attention, List<String> task_tag){
         //初始化创建时间
         Calendar calendar = Calendar.getInstance();
         begin_year = calendar.get(Calendar.YEAR);
-        begin_month = calendar.get(Calendar.MONTH);
+        begin_month = calendar.get(Calendar.MONTH) + 1;
         begin_day = calendar.get(Calendar.DAY_OF_MONTH);
 
         //初始化截止日期
         this.end_year = end_year;
         this.end_month = end_month;
         this.end_day = end_day;
+        this.end_hour = end_hour;
+        this.end_minute = end_minute;
 
         //初始化任务内容
         this.task_name = task_name;
@@ -108,8 +119,113 @@ public class Task implements Serializable {
 
         //初始化任务位置
         this.task_location = new ArrayList<>();
+        this.task_tag = task_tag;
         flag_finished = false;
     }
+
+    public Task(int end_year, int end_month, int end_day, int end_hour, int end_minute,
+                String task_name, String task_content, String task_attention){
+        //初始化创建时间
+        Calendar calendar = Calendar.getInstance();
+        begin_year = calendar.get(Calendar.YEAR);
+        begin_month = calendar.get(Calendar.MONTH) + 1;
+        begin_day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        //初始化截止日期
+        this.end_year = end_year;
+        this.end_month = end_month;
+        this.end_day = end_day;
+        this.end_hour = end_hour;
+        this.end_minute = end_minute;
+
+        //初始化任务内容
+        this.task_name = task_name;
+        this.task_content = task_content;
+        this.task_attention = task_attention;
+
+        //初始化任务位置
+        this.task_location = new ArrayList<>();
+        this.task_tag = new ArrayList<>();
+        flag_finished = false;
+    }
+
+    public Task(Calendar cld, String task_name, String task_content, String task_attention,
+                List<Location> task_location, List<String> task_tag){
+        //初始化创建时间
+        Calendar calendar = Calendar.getInstance();
+        begin_year = calendar.get(Calendar.YEAR);
+        begin_month = calendar.get(Calendar.MONTH) + 1;
+        begin_day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        //初始化截止日期
+        this.end_year = cld.get(Calendar.YEAR);
+        this.end_month = cld.get(Calendar.MONTH) + 1;
+        this.end_day = cld.get(Calendar.DAY_OF_MONTH);
+        this.end_hour = cld.get(Calendar.HOUR_OF_DAY);
+        this.end_minute = cld.get(Calendar.MINUTE);
+
+        //初始化任务内容
+        this.task_name = task_name;
+        this.task_content = task_content;
+        this.task_attention = task_attention;
+
+        //初始化任务位置
+        this.task_location = task_location;
+        this.task_tag = task_tag;
+        flag_finished = false;
+    }
+
+    public Task(Calendar cld, String task_name, String task_content,
+                String task_attention, List<Location> task_location){
+        //初始化创建时间
+        Calendar calendar = Calendar.getInstance();
+        begin_year = calendar.get(Calendar.YEAR);
+        begin_month = calendar.get(Calendar.MONTH) + 1;
+        begin_day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        //初始化截止日期
+        this.end_year = cld.get(Calendar.YEAR);
+        this.end_month = cld.get(Calendar.MONTH) + 1;
+        this.end_day = cld.get(Calendar.DAY_OF_MONTH);
+        this.end_hour = cld.get(Calendar.HOUR_OF_DAY);
+        this.end_minute = cld.get(Calendar.MINUTE);
+
+        //初始化任务内容
+        this.task_name = task_name;
+        this.task_content = task_content;
+        this.task_attention = task_attention;
+
+        //初始化任务位置
+        this.task_location = task_location;
+        this.task_tag = new ArrayList<>();
+        flag_finished = false;
+    }
+
+    public Task(Calendar cld, String task_name, String task_content, String task_attention){
+        //初始化创建时间
+        Calendar calendar = Calendar.getInstance();
+        begin_year = calendar.get(Calendar.YEAR);
+        begin_month = calendar.get(Calendar.MONTH) + 1;
+        begin_day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        //初始化截止日期
+        this.end_year = cld.get(Calendar.YEAR);
+        this.end_month = cld.get(Calendar.MONTH) + 1;
+        this.end_day = cld.get(Calendar.DAY_OF_MONTH);
+        this.end_hour = cld.get(Calendar.HOUR_OF_DAY);
+        this.end_minute = cld.get(Calendar.MINUTE);
+
+        //初始化任务内容
+        this.task_name = task_name;
+        this.task_content = task_content;
+        this.task_attention = task_attention;
+
+        //初始化任务位置
+        this.task_location = new ArrayList<>();
+        this.task_tag = new ArrayList<>();
+        flag_finished = false;
+    }
+
 
 /*********************************初始化部分结束****************************************/
 /***************************************************************************************/
@@ -139,22 +255,64 @@ public class Task implements Serializable {
         return true;
     }
 
-    public boolean changeTime(int end_year, int end_month, int end_day){
+    //修改任务截止时间,通过输入数字进行修改
+    public boolean changeTime(int end_year, int end_month, int end_day, int end_hour, int end_minute){
         //获得当前时间
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
 
         //最多只允许添加本日任务，若时间早于当前时间，则当做错误，不修改任务时间
         if (end_day < year || (end_day == year && end_month < month) ||
-                (end_year == year && end_month == month && end_day < day))
+                (end_year == year && end_month == month && end_day < day) ||
+                (end_year == year && end_month == month && end_day == day && end_hour < hour) ||
+                (end_year == year && end_month == month && end_day == day && end_hour == hour && end_minute < minute))
             return false;
 
         //满足条件，对任务时间进行修改
         this.end_day = end_day;
         this.end_month = end_month;
         this.end_year = end_year;
+        this.end_hour = end_hour;
+        this.end_minute = end_minute;
+
+        return true;
+    }
+
+    //修改任务截止时间,通过输入Calendar
+    public boolean changeTime(Calendar cld){
+        //获得当前时间
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        //获取目标cld的各部分
+        int nd_year = cld.get(Calendar.YEAR);
+        int nd_month = cld.get(Calendar.MONTH) + 1;
+        int nd_day = cld.get(Calendar.DAY_OF_MONTH);
+        int nd_hour = cld.get(Calendar.HOUR_OF_DAY);
+        int nd_minute = cld.get(Calendar.MINUTE);
+
+        //最多只允许添加本日任务，若时间早于当前时间，则当做错误，不修改任务时间
+        if (nd_day < year || (nd_day == year && nd_month < month) ||
+                (nd_year == year && nd_month == month && nd_day < day) ||
+                (nd_year == year && nd_month == month && nd_day == day && nd_hour < hour) ||
+                (nd_year == year && nd_month == month && nd_day == day && nd_hour == hour && nd_minute < minute))
+            return false;
+
+        //满足条件，对任务时间进行修改
+        this.end_day = nd_day;
+        this.end_month = nd_month;
+        this.end_year = nd_year;
+        this.end_hour = nd_hour;
+        this.end_minute = nd_minute;
+
         return true;
     }
 
@@ -238,30 +396,31 @@ public class Task implements Serializable {
         }
     }
 
-    //获取距离截止日期的时间，单位为天
+    //获取距离截止日期的时间，单位改为分钟
     public int TaskRestTime(){
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
 
-        int begin, end;
-        if (year == this.begin_year){
-            if (month == this.begin_month)
-                return day - begin_day;
-
-            else {
-                begin = getdays(begin_month, begin_day);
-                end = getdays(month, day);
-                return end - begin;
-            }
+        int begin, end, len = 0;
+        if (year == this.end_year){
+            begin = getdays(month, day);
+            end = getdays(end_month, end_day);
+            len = end - begin;
         }
         else {
-            int sub = 365 * (year - this.begin_year);
-            begin = getdays(begin_month, begin_day);
-            end = getdays(month, day);
-            return end + sub - begin;
+            int sub = 365 * (this.end_year - year);
+            begin = getdays(month, day);
+            end = getdays(end_month, end_day);
+            len = end + sub - begin;
         }
+
+        //将天数乘以24*60，再加上两个hour minute的结果，就等于分钟，最后写一个返回城天 + hour + 分钟就好了
+        int length = len * 24 * 60 + (end_hour * 60 + end_minute) - (hour * 60 + minute);
+        return length;
     }
 
     public boolean isEmpty(){
@@ -275,7 +434,21 @@ public class Task implements Serializable {
         return flag_finished;
     }
 
-/*********************************读取操作部分结束**************************************/
+    @Override
+    public String toString() {
+        String beginday = "BEGIN TIME : " + Integer.toString(begin_year) + "." +
+                Integer.toString(begin_month) + "." + Integer.toString(begin_day) + "\n";
+
+        String endday = "END TIME : " + Integer.toString(end_year) + "." +
+                Integer.toString(end_month) + "." + Integer.toString(end_day)
+                /*+ " " + Integer.toString(end_minute) + ":" +
+                Integer.toString(end_second) */+ "\n";
+        String content = "task name :" + task_name + "\ntask content :" +
+                task_content + "\ntask attention : " + task_attention + "\n";
+        return beginday + endday + content + "\n";
+    }
+
+    /*********************************读取操作部分结束**************************************/
 /***************************************************************************************/
 
 //内部操作函数

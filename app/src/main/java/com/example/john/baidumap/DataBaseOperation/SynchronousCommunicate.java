@@ -1,11 +1,12 @@
 package com.example.john.baidumap.DataBaseOperation;
 
 
-import baseclass.User;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+
+import baseclass.User;
 
 /**
  * Created by android学习 on 2017/12/12.

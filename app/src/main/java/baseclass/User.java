@@ -118,7 +118,12 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        String word = "欢迎" + Account;
+        String word;
+        if (NickName.isEmpty())
+            word = "欢迎" + Account;
+        else
+            word = "欢迎" + NickName;
+
         if (isBoy())
             word += "先生！";
         else
